@@ -18,11 +18,13 @@ pytest --html=./reports/report.html
 下载allure，解压缩，将allure的bin目录添加到环境变量中
 #### 3、生成测试报告
 ```
-1、生成测试数据
+1、安排allure模块
+pip install allure-pytest
+2、生成测试数据
 pytest --alluredir ./report/allure
-2、在线预览
+3、在线预览
 allure serve ./report/allure
-3、生成本地静态数据
+4、生成本地静态数据
 allure generate ./report/allure -o ./report/result
 ```
 ![allure装饰器介绍](./assets/Readme-1636450087171.png)

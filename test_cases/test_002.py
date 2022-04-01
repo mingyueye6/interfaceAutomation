@@ -4,13 +4,13 @@ import shutil
 import jsonpath
 import pytest
 
-from tools.operationYaml import OperationYaml
 from tools.updateData import UpdateData
 from tools.sendRequest import SendRequest
+from tools.operationExcel import xlrdOperationExcel
 
 
 class TestCase():
-    cases = OperationYaml('cases.yaml')
+    cases = xlrdOperationExcel('cases.xlsx')
     global depend_data
     depend_data = {"csrftoken": "", "cookies": ""}
 
@@ -53,6 +53,8 @@ class TestCase():
 
 
 if __name__ == '__main__':
-    if os.path.exists('../reports/pytest-html/'):
-        shutil.rmtree('../reports/pytest-html/')
-    pytest.main(['-s', '-v', "test_001.py", '--html=../reports/pytest-html/report.html'])
+    # if os.path.exists('../reports/allure/'):
+    #     shutil.rmtree('../reports/allure/')
+    # pytest.main(['--alluredir=../reports/allure/xml', "test_002.py"])
+    # os.system('allure generate ../reports/allure/xml -o ../reports/allure/result')
+    pytest.main(["-s", "-v", "test_002.py"])

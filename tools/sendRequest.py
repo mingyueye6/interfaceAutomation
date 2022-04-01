@@ -9,23 +9,28 @@ def SendRequest(url, method="GET", data=None, headers=None, cookies=None):
             res = requests.post(url=url, data=data, headers=headers, cookies=cookies)
         elif method.upper() == "DELETE":
             res = requests.delete(url=url, data=data, headers=headers, cookies=cookies)
-    except:
-        return None
-    try:
-        data = res.json()
-    except:
-        data = {}
-    try:
-        cookies = requests.utils.dict_from_cookiejar(res.cookies)
-        cookie = res.request.headers.get('Cookie', '')
-        if not cookie:
-            cookies["cookies"] = res.cookies
-        else:
-            cookies["cookies"] = cookie
     except Exception as err:
         print(err)
-        cookies = {"cookies":""}
-    return {"cookies": cookies, "data": data}
+        return None
+    data = {}
+    try:
+        data = res.json()
+    except Exception as err:
+        pass
+    csrftoken = ""
+    cookie = ""
+    try:
+        cookies = res.cookies
+        if cookies:
+            csrftoken = cookies.get("csrftoken", "")
+        cookie = res.request.headers.get('Cookie', '')
+        if not cookie:
+            cookie = cookies
+        else:
+            cookie = cookie
+    except Exception as err:
+        print(err)
+    return {"cookies": cookie, "csrftoken": csrftoken, "data": data}
 
 
 if __name__ == '__main__':
@@ -35,5 +40,6 @@ if __name__ == '__main__':
     headers = {
         "Cookie": "csrftoken=YNCCm2BX1S3lplxhaDWO90ynqBm9dRPB1CwZ1fG75czvoVuLuMzWGCAaP7rEDcmL"
     }
-    data = SendRequest(url, "post", data=data, headers=headers)
+    # data = SendRequest(url, "post", data=data, headers=headers)
+    data = SendRequest("http://49.235.168.69:8000/api-auth/login/")
     print(data)

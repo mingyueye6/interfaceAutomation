@@ -1,6 +1,5 @@
-index:
-  name: 首页
-  is_run: Y
+首页:
+  is_run: N
   url: http://49.235.168.69:8000/api-auth/login/?next=/
   request_type: get
   request_header:
@@ -8,36 +7,33 @@ index:
   request_cookie:
   response_assert:
   response_data:
-    csrftoken: $.cookies.csrftoken
-    cookies: $.cookies.cookies
 
-login:
-  name: 登录
+登录:
   is_run: Y
   url: http://49.235.168.69:8000/api-auth/login/?next=/
   request_type: post
   request_header:
   request_data:
-    csrfmiddlewaretoken: $.index.csrftoken
+    csrfmiddlewaretoken: $.csrftoken
     next: /?format=json
     username: test001
     password: ceshi001
     submit: Log in
-  request_cookie: $.index.cookies
+  request_cookie: $.cookies
   response_assert:
     $.data.goods: http://49.235.168.69:8000/goods/?format=json
   response_data:
-    cookies: $.cookies.cookies
 
-userfavs_list:
-  name: 收藏列表
+收藏列表:
   is_run: Y
   url: http://49.235.168.69:8000/userfavs/?format=json
   request_type: get
   request_header:
-    Cookie: $.login.cookies
+    Cookie: $.cookies
   request_data:
   request_cookie:
   response_assert:
-    $.data.goods[0].id: 1
+    $.data[0].goods.id: 1
   response_data:
+
+  
