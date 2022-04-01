@@ -1,5 +1,5 @@
 首页:
-  is_run: N
+  is_run: Y
   url: http://49.235.168.69:8000/api-auth/login/?next=/
   request_type: get
   request_header:
@@ -25,12 +25,26 @@
   response_data:
 
 收藏列表:
-  is_run: Y
+  is_run: N
   url: http://49.235.168.69:8000/userfavs/?format=json
   request_type: get
   request_header:
     Cookie: $.cookies
   request_data:
+  request_cookie:
+  response_assert:
+    $.data[0].goods.id: 1
+  response_data:
+
+取消收藏:
+  is_run: Y
+  url: http://49.235.168.69:8000/userfavs/1/
+  request_type: delete
+  request_header:
+    Cookie: $.cookies
+    X-CSRFToken: $.csrftoken
+  request_data:
+    csrfmiddlewaretoken: $.csrftoken
   request_cookie:
   response_assert:
     $.data[0].goods.id: 1
