@@ -1,6 +1,6 @@
 import os
 import shutil
-
+import logging
 import jsonpath
 import pytest
 
@@ -19,7 +19,7 @@ class TestCase():
         case_name = case[0]
         if not case_name:
             pytest.skip()
-        print("用例名称：%s" % case_name)
+        logging.info("用例名称：%s" % case_name)
         case_data = case[1]
         if case_data['is_run'] == "N":
             pytest.skip()
@@ -38,6 +38,7 @@ class TestCase():
                 cookies_list.append(key + "=" + value)
             request_header["Cookie"] = "; ".join(cookies_list)
         res = SendRequest(url, request_type, request_data, request_header)
+        logging.info(res)
         if not res:
             raise Exception("请求异常")
         else:
