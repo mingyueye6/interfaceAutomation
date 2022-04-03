@@ -12,11 +12,14 @@ from tools.sendRequest import SendRequest
 class TestCase():
     cases = OperationYaml('cases.yaml')
     global depend_data
-    depend_data = {"csrftoken": "", "cookies": ""}
+    depend_data = {}
 
     @pytest.mark.parametrize("case", cases)
     def test_case(self, case):
-        print("用例名称：%s" % case[0])
+        case_name = case[0]
+        if not case_name:
+            pytest.skip()
+        print("用例名称：%s" % case_name)
         case_data = case[1]
         if case_data['is_run'] == "N":
             pytest.skip()
@@ -26,14 +29,19 @@ class TestCase():
         request_header = case_data['request_header']
         request_data = case_data['request_data']
         request_cookie = case_data["request_cookie"]
-        res = SendRequest(url, request_type, request_data, request_header, request_cookie)
+        if request_cookie == "Y":
+            if not request_header:
+                request_header = {}
+            cookies_dic = depend_data["cookies"]
+            cookies_list = []
+            for key, value in cookies_dic.items():
+                cookies_list.append(key + "=" + value)
+            request_header["Cookie"] = "; ".join(cookies_list)
+        res = SendRequest(url, request_type, request_data, request_header)
         if not res:
             raise Exception("请求异常")
         else:
-            if res["csrftoken"]:
-                depend_data["csrftoken"] = res["csrftoken"]
-            if res["cookies"]:
-                depend_data["cookies"] = res["cookies"]
+            depend_data["cookies"] = res["cookies"]
             response_data = case_data["response_data"]
             if response_data:
                 for key, value in response_data.items():
